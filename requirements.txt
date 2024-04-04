@@ -1,0 +1,5 @@
+streamlit
+boto3
+tabulate
+pandas
+amazon_textract_response_parser
