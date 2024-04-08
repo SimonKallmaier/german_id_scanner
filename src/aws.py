@@ -6,25 +6,18 @@ import pandas as pd
 import trp.trp2 as t2
 from PIL import Image
 
+# Set AWS credentials from environment variables
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 
-def configure_boto3_client():
-    # Set AWS credentials from environment variables
-    aws_access_key_id = os.environ.get("AWS_ACCESS_KEY_ID")
-    aws_secret_access_key = os.environ.get("AWS_SECRET_ACCESS_KEY")
-
-    # Configure Boto3 client
-    client = boto3.client(
-        "textract",
-        aws_access_key_id=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key,
-        region_name="eu-central-1",
-    )
-    print("Successfully configured Boto3 client.")
-
-    return client
-
-
-TEXTRACT = configure_boto3_client()
+# Configure Boto3 client
+TEXTRACT = boto3.client(
+    "textract",
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    region_name="eu-central-1",
+)
+print("Successfully configured Boto3 client.")
 
 
 def extract_id_information(image: Image.Image):
