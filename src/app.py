@@ -46,7 +46,8 @@ def selector_image_or_camera():
     option = st.selectbox("Select an option", ["Image", "Camera"])
     if option == "Image":
         return image_uploader()
-    else:
+    else:  # Camerag
+        st.warning("The resolution of the camera is limited. Please upload an image for better results.")
         return camera_uploader()
 
 
