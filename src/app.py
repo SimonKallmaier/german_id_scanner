@@ -5,26 +5,20 @@ from PIL import Image
 
 from aws import extract_id_information
 
-# """
-# # TODO s
-# 2. Make Upload function more pretty
-# 3. change resolution of image
-# """
+st.session_state.user_authentificated = False
 
 
 def user_authentification():
     """This function receives a users password and name from the environment variables."""
-    st.write("User Management")
     st_user_name = st.text_input("User Name")
     st_user_password = st.text_input("Password", type="password")
 
-    user_name = os.getenv("USER_NAME")
-    password = os.getenv("PASSWORD")
+    user_name = os.getenv("USER_NAME", "admin")
+    password = os.getenv("PASSWORD", "admin")
 
     if st_user_name == user_name and st_user_password == password:
         st.write("User authenticated")
-        return True
-    return False
+        st.session_state.user_authentificated = True
 
 
 def camera_uploader():
@@ -49,7 +43,7 @@ def image_uploader():
 
 
 def selector_image_or_camera():
-    option = st.selectbox("Select an option", ["Camera", "Image"])
+    option = st.selectbox("Select an option", ["Image", "Camera"])
     if option == "Image":
         return image_uploader()
     else:
@@ -64,19 +58,12 @@ def extract_information(image: Image.Image):
 
 def run():
 
-    st.header("Document AI App")
-
-    is_valid_user = user_authentification()
-    is_valid_user = True
-    if not is_valid_user:
+    st.header("German ID Card Information Extraction")
+    user_authentification()
+    if not st.session_state.user_authentificated:
         st.write("User not authenticated. Please try again.")
     else:
-
-        st.subheader("Upload an image or take a photo to extract information")
-        st.write(
-            "This app allows you to upload an image or take a photo using your camera. Once you have selected an image, you can extract information from it using the 'Extract Text' button."  # noqa E501
-        )
-        st.write("The extracted text will be displayed below the image.")
+        st.subheader("Upload an image or take a photo to extract information.")
         image = selector_image_or_camera()
         st.write("You can extract information from the image.")
         extract_information(image)
