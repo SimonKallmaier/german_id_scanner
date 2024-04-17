@@ -6,7 +6,7 @@ from PIL import Image
 from aws import extract_id_information
 from salary_scanner import get_salary_information
 
-st.set_page_config(layout="wide", page_title="CIC Finnovation Project Results")
+st.set_page_config(layout="wide", page_title="AI Document Processing")
 
 if "user_authenticated" not in st.session_state:
     st.session_state.user_authenticated = False
