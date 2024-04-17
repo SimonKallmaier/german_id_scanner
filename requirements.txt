@@ -3,3 +3,4 @@ boto3
 tabulate
 pandas
 amazon-textract-response-parser
+openai>=1.0.0
