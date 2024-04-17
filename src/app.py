@@ -4,6 +4,7 @@ import streamlit as st
 from PIL import Image
 
 from aws import extract_id_information
+from salary_scanner import get_salary_information
 
 st.session_state.user_authentificated = False
 
@@ -52,8 +53,17 @@ def selector_image_or_camera():
 
 
 def extract_information(image: Image.Image):
+
+    option = st.selectbox("Select an option", ["ID", "Salary"])
+    if option == "ID":
+        extract_func = extract_id_information
+
+    else:
+        extract_func = get_salary_information
+        st.write("Not implemented yet.")
+
     if st.button("Extract Text"):
-        extracted_text = extract_id_information(image)
+        extracted_text = extract_func(image)
         st.write("Extracted Text:", extracted_text)
 
 
