@@ -60,7 +60,6 @@ def extract_information(image: Image.Image):
 
     else:
         extract_func = get_salary_information
-        st.write("Not implemented yet.")
 
     if st.button("Extract Text"):
         extracted_text = extract_func(image)
