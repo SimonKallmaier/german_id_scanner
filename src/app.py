@@ -51,7 +51,7 @@ def selector_image_or_camera():
 
 
 def run():
-    st.header("German ID Card Information Extraction")
+    st.header("Document Information Extraction for IDs and Pay Slips.")
     user_authentication()
     if st.session_state.user_authenticated:
         st.subheader("Upload an image or take a photo to extract information.")

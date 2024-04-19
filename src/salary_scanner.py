@@ -10,6 +10,23 @@ client = OpenAI()
 TEXTRACT_CLIENT = boto3.client("textract")
 
 
+_OUTPUT = """{{
+    "AUSZAHLUNG": float,
+    "BRUTTO": float,
+    "DATUM": str,
+    "SteuerID": str,
+    "SV Nummer": str,
+}}"""
+
+_FIELDS = {
+    "AUSZAHLUNG": "Der finale Auszahlungsbetrag, den der Mitarbeiter für den Monat erhält.",
+    "BRUTTO": "Das Einkommen vor Steuern.",
+    "DATUM": "Das Datum des Gehaltsdokuments.",
+    "SteuerID": "Die Steueridentifikationsnummer des Mitarbeiters.",
+    "SV Nummer": "Die Sozialversicherungsnummer des Mitarbeiters.",
+}
+
+
 def get_completion(text: str):
     completion = openai.chat.completions.create(
         model="gpt-3.5-turbo",
@@ -17,8 +34,10 @@ def get_completion(text: str):
             {
                 "role": "user",
                 "content": (
-                    f"You are a helpful assistant that needs to check the salary statements and extract the income before taxes and the final amount that is paid to the employee for the month (not year). The statements are in German. You will get the raw text: RAW_TEXT: {text}"  # noqa E501
-                    "The output should a dictionary with the keys 'AUSZAHLUNG' and 'BRUTTO' and the corresponding values as floats."  # noqa E501
+                    f"You are a helpful assistant that needs to extraction certain information from a German salary statement. You will get a dictionary with the required information as keys and description as corresponding value."  # noqa E501
+                    f" Required information: {_FIELDS}."
+                    " RAW_TEXT_START:\n {text} \n RAW_TEXT_END"
+                    f" The output should a dictionary with this format: {_OUTPUT}"  # noqa E501
                 ),
             },
         ],
