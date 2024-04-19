@@ -1,10 +1,11 @@
-import io
 import os
 
 import boto3
 import pandas as pd
 import trp.trp2 as t2
 from PIL import Image
+
+from utils import image_loader
 
 # Set AWS credentials from environment variables
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
@@ -21,10 +22,7 @@ print("Successfully configured Boto3 client.")
 
 
 def extract_id_information(image: Image.Image):
-    imageBytes = io.BytesIO()
-    image.save(imageBytes, format="JPEG")  # Change 'JPEG' to the appropriate format if needed
-    imageBytes = imageBytes.getvalue()
-
+    imageBytes = image_loader(image)
     # Call Textract
     response = TEXTRACT.analyze_document(
         Document={"Bytes": imageBytes},

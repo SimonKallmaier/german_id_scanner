@@ -1,10 +1,11 @@
 import ast
-import io
 
 import boto3
 import openai
 from openai import OpenAI
 from PIL import Image
+
+from utils import image_loader
 
 client = OpenAI()
 TEXTRACT_CLIENT = boto3.client("textract")
@@ -27,9 +28,7 @@ def get_completion(text: str):
 
 
 def get_text_salary_information(image: Image.Image):
-    imageBytes = io.BytesIO()
-    image.save(imageBytes, format="JPEG")
-    imageBytes = imageBytes.getvalue()
+    imageBytes = image_loader(image)
     # Call Textract
     response = TEXTRACT_CLIENT.detect_document_text(Document={"Bytes": imageBytes})
     text = ""
