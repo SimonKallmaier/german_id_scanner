@@ -33,7 +33,7 @@ def cost_salary_scanner(num_input_tokens: int, num_output_tokens: int, model_typ
 
     # Pricing structure for GPT models
     model_pricing = {
-        "gpt-3.5-turbo": {"input": 0.50 / 1_000_000, "output": 1.50 / 1_000_000},
+        "gpt-3.5-turbo": {"input": 1.50 / 1_000_000, "output": 1.50 / 1_000_000},
         # "gpt-3.5-turbo-instruct": {"input": 1.50 / 1_000_000, "output": 2.00 / 1_000_000},
     }
 
@@ -53,15 +53,11 @@ def get_completion(text: str, salary: bool = True):
     else:
         prompt = f"You are a helpful assitant that needs to extract information from different National ID cards. The text is: RAW_TEXT: {text} \n The output should be a dictionary with the keys 'ID', 'Given Name', 'Surname', 'Nationality', 'Date of Birth', 'Place of Birth', 'Address', 'Date of Issue', 'Date of Expiry' and the corresponding values as strings."  # noqa E501
 
-    # Calculate the number of tokens in the prompt
-    num_input_tokens = len(prompt)
-
     # Request completion from the model
     completion = OPENAI_CLIENT.chat.completions.create(model=model, messages=[{"role": "user", "content": prompt}])
-
-    # Extract completion details
+    num_input_tokens = completion.usage.prompt_tokens
+    num_output_tokens = completion.usage.completion_tokens
     completion_message = completion.choices[0].message.content
-    num_output_tokens = len(completion_message.split())
 
     costs = cost_salary_scanner(
         num_input_tokens=num_input_tokens,
