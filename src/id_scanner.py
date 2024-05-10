@@ -2,27 +2,30 @@ import os
 
 import boto3
 import pandas as pd
+import streamlit as st
 import trp.trp2 as t2
 from PIL import Image
 
-from utils import image_loader
+from utils import TEXTRACT, get_text_information, image_loader
 
 # Set AWS credentials from environment variables
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 
 # Configure Boto3 client
-TEXTRACT = boto3.client(
-    "textract",
-    aws_access_key_id=AWS_ACCESS_KEY_ID,
-    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-    region_name="eu-central-1",
-)
+
 print("Successfully configured Boto3 client.")
+
+
+def cost_id_scanner():
+    return 15 / 1000  # 0.015 USD per page
 
 
 def extract_id_information(image: Image.Image):
     imageBytes = image_loader(image)
+
+    response = TEXTRACT.detect_document_text(Document={"Bytes": imageBytes})
+
     # Call Textract
     response = TEXTRACT.analyze_document(
         Document={"Bytes": imageBytes},
@@ -49,4 +52,6 @@ def extract_id_information(image: Image.Image):
 
     query_answers = d.get_query_answers(page=page)
 
+    costs = cost_id_scanner()
+    st.write(f"Total cost: ${costs:.4f} USD")
     return pd.DataFrame(query_answers).rename(columns={0: "Question", 1: "Alias", 2: "Answer"})

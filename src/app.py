@@ -3,7 +3,7 @@ import os
 import streamlit as st
 from PIL import Image
 
-from aws import extract_id_information
+from id_scanner import extract_id_information
 from salary_scanner import get_salary_information
 
 st.set_page_config(layout="wide", page_title="AI Document Processing")
@@ -22,7 +22,7 @@ def user_authentication():
 
         if st_user_name == user_name and st_user_password == password:
             st.session_state.user_authenticated = True
-            st.experimental_rerun()
+            st.rerun()
 
 
 def camera_uploader():
